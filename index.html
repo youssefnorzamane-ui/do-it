@@ -1,242 +1,274 @@
 
-<!DOCTYPE html>
+<!doctype html>
 <html lang="fr">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="theme-color" content="#090d18">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#ffffff">
 <title>DO IT — Tu imagines. On réalise.</title>
 <style>
-:root{--bg:#090d18;--panel:#111827;--panel2:#172235;--blue:#397bff;--text:#f4f7ff;--muted:#8d9bb2;--line:#26344a}
+:root{color-scheme:light;--bg:#fff;--panel:#fff;--soft:#f7f7f8;--text:#171717;--muted:#777;--line:#e8e8e8;--accent:#171717;--accentText:#fff}
 *{box-sizing:border-box}
-body{margin:0;background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}
-button,input{font:inherit}
+body{margin:0;background:var(--bg);color:var(--text);font:15px/1.5 Inter,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}
+button,textarea{font:inherit}
 button{cursor:pointer}
-.app{max-width:1100px;margin:auto;padding:22px}
-header{display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid var(--line);padding:10px 0 22px}
-.logo{font-size:25px;font-weight:900;letter-spacing:2px}
-.logo span{color:#5790ff}
-.tag{color:var(--muted);font-size:12px;margin-top:4px}
-.status{font-size:12px;color:#76e5b0;background:#143326;padding:8px 12px;border-radius:30px}
-.hero{padding:48px 0 30px}
-.eyebrow{color:#76a5ff;font-size:12px;letter-spacing:2px;font-weight:700}
-h1{font-size:clamp(34px,7vw,62px);line-height:1.08;margin:15px 0}
-h1 span{color:#5790ff}
-p{color:var(--muted);line-height:1.6}
-.hero p{max-width:560px}
-.layout{display:grid;grid-template-columns:220px 1fr;gap:20px}
-nav,.panel,.project{background:var(--panel);border:1px solid var(--line);border-radius:16px}
-nav{padding:12px;height:max-content}
-nav button{width:100%;text-align:left;border:0;background:transparent;color:var(--muted);padding:14px;border-radius:10px;margin:3px 0}
-nav button.active,nav button:hover{background:var(--panel2);color:white}
-main{min-width:0}
-.panel{padding:22px;margin-bottom:16px}
-.panel h2{margin:0 0 8px;font-size:21px}
-.section-head{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-bottom:18px}
-.primary{background:var(--blue);color:white;border:0;padding:12px 17px;border-radius:10px;font-weight:700}
-.secondary{background:var(--panel2);color:white;border:1px solid var(--line);padding:11px 14px;border-radius:10px}
-input{width:100%;padding:14px;background:#0c1423;color:white;border:1px solid var(--line);border-radius:10px;outline:none}
-input:focus{border-color:var(--blue)}
-.project{padding:18px;margin:12px 0}
-.project-top{display:flex;justify-content:space-between;gap:10px}
-.project h3{margin:0 0 6px}
-.pill{font-size:11px;color:#91b6ff;background:#1a3158;padding:6px 9px;border-radius:20px;white-space:nowrap}
-.progress{height:6px;background:#26344a;border-radius:10px;margin:15px 0 8px;overflow:hidden}
-.progress div{height:100%;background:var(--blue);width:0%}
-.small{font-size:12px;color:var(--muted)}
-.chat{height:300px;overflow:auto;background:#0c1423;border:1px solid var(--line);border-radius:12px;padding:14px;margin:15px 0}
-.message{padding:12px 14px;border-radius:12px;margin:9px 0;max-width:88%;line-height:1.5;font-size:14px}
-.bot{background:#19263b}
-.user{background:#214c9a;margin-left:auto}
-.chat-form{display:flex;gap:9px}
-.chat-form input{flex:1;min-width:0}
-.task{display:flex;align-items:center;gap:10px;padding:12px 0;border-bottom:1px solid var(--line)}
-.task input{width:18px;height:18px;accent-color:var(--blue)}
-.task label{flex:1;font-size:14px}
-.task.done label{text-decoration:line-through;color:var(--muted)}
-.hidden{display:none!important}
-footer{text-align:center;color:var(--muted);font-size:12px;padding:30px}
-@media(max-width:650px){.app{padding:16px}.layout{grid-template-columns:1fr}nav{display:flex;overflow:auto;padding:7px}nav button{white-space:nowrap;width:auto;margin:0}.hero{padding:32px 0 20px}.panel{padding:17px}}
+.app{min-height:100vh;display:flex}
+.sidebar{width:252px;border-right:1px solid var(--line);padding:18px 14px;display:flex;flex-direction:column;gap:18px;flex-shrink:0;background:var(--panel)}
+.brand{display:flex;align-items:center;gap:10px;padding:3px 7px;font-weight:700;font-size:17px}
+.logo{height:30px;width:30px;border-radius:9px;background:#171717;color:#fff;display:grid;place-items:center}
+.newchat{border:1px solid var(--line);background:var(--panel);border-radius:10px;padding:10px 12px;text-align:left;color:var(--text);display:flex;gap:10px}
+.navtitle{font-size:11px;color:#999;text-transform:uppercase;letter-spacing:.08em;padding:0 8px;margin:4px 0}
+.navitem{border:0;background:transparent;text-align:left;padding:9px 10px;border-radius:9px;color:var(--muted);width:100%;display:flex;gap:10px;align-items:center}
+.navitem:hover,.newchat:hover{background:var(--soft)}
+.sidebar-bottom{margin-top:auto;border-top:1px solid var(--line);padding-top:12px}
+.profile{display:flex;align-items:center;gap:10px;padding:8px}
+.avatar{height:30px;width:30px;border-radius:50%;background:#eee;display:grid;place-items:center;font-size:12px;font-weight:600}
+.main{min-width:0;flex:1;display:flex;flex-direction:column;min-height:100vh}
+.topbar{height:58px;border-bottom:1px solid var(--line);display:flex;align-items:center;justify-content:space-between;padding:0 24px}
+.top-left{display:flex;align-items:center;gap:12px}
+.mobile-brand{display:none;font-weight:700}
+.iconbtn{height:36px;width:36px;border:0;background:transparent;border-radius:9px;color:var(--muted);display:grid;place-items:center}
+.iconbtn:hover{background:var(--soft)}
+.content{width:min(760px,calc(100% - 36px));margin:0 auto;flex:1;display:flex;flex-direction:column;justify-content:center;padding:54px 0 36px}
+.welcome{text-align:center;margin-bottom:34px}
+.welcome h1{font-size:clamp(27px,4vw,36px);line-height:1.2;letter-spacing:-1.2px;margin:0 0 12px;font-weight:650}
+.welcome p{color:var(--muted);margin:0;font-size:15px}
+.composer{border:1px solid #dedede;border-radius:18px;padding:15px 16px 12px;background:var(--panel)}
+.composer:focus-within{border-color:#bdbdbd;box-shadow:0 0 0 3px #00000008}
+textarea{width:100%;border:0;outline:0;resize:none;min-height:55px;max-height:180px;color:var(--text);background:transparent;font-size:15px;line-height:1.5}
+textarea::placeholder{color:#a0a0a0}
+.composer-actions{display:flex;align-items:center;justify-content:space-between}
+.action-left{display:flex;gap:5px}
+.send{height:36px;width:36px;border:0;border-radius:11px;background:var(--accent);color:var(--accentText);display:grid;place-items:center}
+.send:disabled{opacity:.35;cursor:default}
+.suggestions{margin-top:30px}
+.suggestions-label{font-size:11px;letter-spacing:.09em;color:#999;font-weight:600;margin:0 0 12px 2px}
+.suggestion-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.suggestion{border:1px solid var(--line);border-radius:13px;background:var(--panel);padding:13px 14px;text-align:left;display:flex;gap:11px;align-items:flex-start;min-height:76px;color:var(--text)}
+.suggestion:hover{background:var(--soft);border-color:#d5d5d5}
+.s-icon{height:32px;width:32px;border-radius:9px;background:var(--soft);display:grid;place-items:center;flex-shrink:0;color:var(--muted)}
+.s-title{font-weight:600;font-size:13px;display:block;margin-bottom:2px}
+.s-desc{font-size:12px;color:var(--muted);display:block}
+.footer-note{text-align:center;color:#aaa;font-size:11px;margin-top:28px}
+.chat-area{display:none;width:min(760px,calc(100% - 36px));margin:0 auto;flex:1;padding:32px 0;overflow:auto}
+.message{padding:16px 0;display:flex;gap:13px;align-items:flex-start}
+.msg-avatar{width:30px;height:30px;border-radius:50%;background:var(--soft);display:grid;place-items:center;flex-shrink:0;font-size:12px;font-weight:700}
+.msg-body{white-space:pre-wrap;overflow-wrap:anywhere;padding-top:3px;max-width:calc(100% - 45px)}
+.user .msg-avatar{background:#171717;color:#fff}
+.user .msg-body{font-weight:500}
+.typing{color:#888;font-size:13px}
+.chat-composer{width:min(760px,calc(100% - 36px));margin:0 auto 22px}
+.chat-composer .composer{box-shadow:0 3px 16px #0000000f}
+@media(max-width:700px){
+.sidebar{display:none}
+.topbar{height:54px;padding:0 14px}
+.mobile-brand{display:block}
+.content{padding:40px 0 28px}
+.suggestion-grid{grid-template-columns:1fr}
+.suggestion{min-height:66px}
+.welcome{margin-bottom:28px}
+.chat-composer{margin-bottom:12px}
+}
 </style>
 </head>
 <body>
 <div class="app">
-<header>
- <div><div class="logo">DO <span>IT.</span></div><div class="tag">Tu imagines. On réalise.</div></div>
- <div class="status">● Prototype actif</div>
+<aside class="sidebar">
+<div class="brand"><div class="logo">D</div> DO IT</div>
+<button class="newchat" id="newChat">＋ Nouvelle conversation</button>
+<div>
+<div class="navtitle">Espace de travail</div>
+<button class="navitem" id="projectsNav">▦ <span>Mes projets</span></button>
+<button class="navitem" id="historyNav">◷ <span>Historique</span></button>
+</div>
+<div>
+<div class="navtitle">Récent</div>
+<div id="recentList"></div>
+</div>
+<div class="sidebar-bottom">
+<button class="navitem" id="settingsBtn">⚙ <span>Paramètres</span></button>
+<div class="profile">
+<div class="avatar">D</div>
+<div><div style="font-size:13px;font-weight:600">Mon espace</div><div style="font-size:11px;color:#999">DO IT</div></div>
+</div>
+</div>
+</aside>
+<main class="main">
+<header class="topbar">
+<div class="top-left">
+<button class="iconbtn" id="sidebarToggle" aria-label="Afficher le menu">☰</button>
+<div class="mobile-brand">DO IT</div>
+</div>
+<button class="iconbtn" id="themeToggle" aria-label="Changer de thème" title="Mode sombre">◐</button>
 </header>
-
-<section class="hero">
- <div class="eyebrow">TON ASSISTANT DE PROJETS</div>
- <h1>Une idée ?<br><span>On passe à l'action.</span></h1>
- <p>Décris ce que tu veux accomplir. DO IT t'aide à structurer ton projet, organiser les étapes et suivre ton avancement.</p>
+<section class="content" id="home">
+<div class="welcome">
+<h1>On fait quoi aujourd'hui ?</h1>
+<p>Parle-moi de ton idée. On va trouver comment la concrétiser.</p>
+</div>
+<div class="composer">
+<textarea id="prompt" rows="2" placeholder="J'ai une idée de projet..."></textarea>
+<div class="composer-actions">
+<div class="action-left">
+<button class="iconbtn" title="Ajouter un fichier" aria-label="Ajouter un fichier">＋</button>
+<button class="iconbtn" title="Joindre" aria-label="Joindre">⌁</button>
+</div>
+<button class="send" id="send" aria-label="Envoyer" disabled>↑</button>
+</div>
+</div>
+<div class="suggestions">
+<div class="suggestions-label">POUR COMMENCER</div>
+<div class="suggestion-grid">
+<button class="suggestion" data-prompt="Je veux lancer un business. Aide-moi à construire et réaliser le projet.">
+<span class="s-icon">↗</span><span><span class="s-title">Lancer un business</span><span class="s-desc">De l'idée aux premiers clients</span></span>
+</button>
+<button class="suggestion" data-prompt="J'ai un objectif personnel que je veux atteindre. Aide-moi à bâtir un plan concret.">
+<span class="s-icon">◎</span><span><span class="s-title">Atteindre un objectif</span><span class="s-desc">Construire un plan d'action</span></span>
+</button>
+<button class="suggestion" data-prompt="Je veux créer quelque chose : aide-moi à le concevoir et à le réaliser.">
+<span class="s-icon">⌘</span><span><span class="s-title">Créer quelque chose</span><span class="s-desc">Site, application, produit</span></span>
+</button>
+<button class="suggestion" data-prompt="J'aimerais réfléchir à une idée avec toi. Donne-moi ton avis honnête.">
+<span class="s-icon">☏</span><span><span class="s-title">Parler librement</span><span class="s-desc">Réfléchir ensemble</span></span>
+</button>
+</div>
+</div>
+<div class="footer-note">DO IT · Ton idée mérite d'avancer.</div>
 </section>
-
-<div class="layout">
-<nav>
- <button class="active" data-page="home">⌂ Accueil</button>
- <button data-page="chat">✦ Assistant</button>
- <button data-page="projects">▤ Mes projets</button>
- <button data-page="settings">⚙ Paramètres</button>
-</nav>
-
-<main>
-<section id="home" class="page">
- <div class="panel">
-  <div class="section-head"><div><h2>Bienvenue sur DO IT.</h2><p>Quel projet veux-tu réaliser aujourd'hui ?</p></div></div>
-  <input id="idea" placeholder="Ex : Créer mon entreprise, organiser un voyage...">
-  <button class="primary" style="margin-top:12px" onclick="createFromIdea()">Lancer mon projet →</button>
- </div>
- <div class="panel">
-  <div class="section-head"><h2>Mes projets</h2><button class="secondary" onclick="showPage('projects')">Tout voir</button></div>
-  <div id="homeProjects"></div>
- </div>
-</section>
-
-<section id="chat" class="page hidden">
- <div class="panel">
-  <h2>✦ Assistant DO IT</h2>
-  <p>Explique-moi ton idée. Nous allons la transformer en plan d'action.</p>
-  <div class="chat" id="chatBox">
-   <div class="message bot">Bonjour ! Je suis l'assistant de démonstration DO IT. Quel projet souhaites-tu réaliser ?</div>
-  </div>
-  <form class="chat-form" onsubmit="sendMessage(event)">
-   <input id="chatInput" placeholder="Écris ton message..." autocomplete="off">
-   <button class="primary">Envoyer</button>
-  </form>
- </div>
-</section>
-
-<section id="projects" class="page hidden">
- <div class="panel">
-  <div class="section-head"><h2>Mes projets</h2><button class="primary" onclick="newProject()">+ Nouveau</button></div>
-  <div id="allProjects"></div>
- </div>
-</section>
-
-<section id="settings" class="page hidden">
- <div class="panel">
-  <h2>Paramètres</h2>
-  <p>DO IT — Version prototype 0.1</p>
-  <p>Les projets de cette démonstration sont enregistrés sur cet appareil.</p>
-  <button class="secondary" onclick="clearProjects()">Effacer les projets</button>
- </div>
-</section>
+<section class="chat-area" id="chatArea"></section>
+<div class="chat-composer" id="chatComposer" style="display:none">
+<div class="composer">
+<textarea id="chatPrompt" rows="2" placeholder="Continue la conversation..."></textarea>
+<div class="composer-actions">
+<div class="action-left"><button class="iconbtn" title="Ajouter un fichier">＋</button></div>
+<button class="send" id="chatSend" disabled aria-label="Envoyer">↑</button>
+</div>
+</div>
+</div>
 </main>
 </div>
-<footer>DO IT © 2026 · Tu imagines. On réalise.</footer>
-</div>
-
 <script>
-let projects=JSON.parse(localStorage.getItem("doit_projects")||"[]");
-let activeProject=null;
+const API_URL="https://do-it-api.youssef-norzamane.workers.dev/";
+const $=id=>document.getElementById(id);
+let messages=[],chats=JSON.parse(localStorage.getItem("doit_chats")||"[]"),dark=false;
 
-function save(){localStorage.setItem("doit_projects",JSON.stringify(projects));render()}
-function showPage(id){
- document.querySelectorAll(".page").forEach(p=>p.classList.add("hidden"));
- document.getElementById(id).classList.remove("hidden");
- document.querySelectorAll("nav button").forEach(b=>b.classList.toggle("active",b.dataset.page===id));
+function save(){
+localStorage.setItem("doit_chats",JSON.stringify(chats.slice(0,20)));
+renderRecent();
 }
-document.querySelectorAll("nav button").forEach(b=>b.addEventListener("click",()=>showPage(b.dataset.page)));
-
-function createFromIdea(){
- const input=document.getElementById("idea");
- const name=input.value.trim();
- if(!name){input.focus();return}
- projects.unshift({id:Date.now(),name,tasks:["Définir précisément l'objectif","Préparer un plan d'action","Réaliser la première étape"],done:[],created:new Date().toLocaleDateString("fr-FR")});
- input.value="";
- save();showPage("projects");
+function renderRecent(){
+$("recentList").innerHTML="";
+chats.slice(0,6).forEach((c,i)=>{
+let b=document.createElement("button");
+b.className="navitem";
+b.textContent="◦ "+c.title;
+b.onclick=()=>loadChat(i);
+$("recentList").appendChild(b);
+});
 }
-function newProject(){
- const name=prompt("Quel est le nom de ton projet ?");
- if(!name||!name.trim())return;
- projects.unshift({id:Date.now(),name:name.trim(),tasks:["Définir l'objectif","Préparer les étapes","Passer à l'action"],done:[],created:new Date().toLocaleDateString("fr-FR")});
- save();
+function titleFrom(s){return s.length>36?s.slice(0,36)+"…":s}
+function showChat(){
+$("home").style.display="none";
+$("chatArea").style.display="block";
+$("chatComposer").style.display="block";
 }
-function render(){
- const card=p=>{
-  const progress=p.tasks.length?Math.round(p.done.length/p.tasks.length*100):0;
-  return `<div class="project"><div class="project-top"><div><h3>${escapeHTML(p.name)}</h3><div class="small">Créé le ${p.created}</div></div><span class="pill">${progress}% terminé</span></div><div class="progress"><div style="width:${progress}%"></div></div><button class="secondary" onclick="openProject(${p.id})">Ouvrir le projet →</button></div>`;
- };
- document.getElementById("homeProjects").innerHTML=projects.length?projects.slice(0,2).map(card).join(""):"<p>Aucun projet pour le moment. Lance ta première idée !</p>";
- document.getElementById("allProjects").innerHTML=projects.length?projects.map(card).join(""):"<p>Tes projets apparaîtront ici.</p>";
+function showHome(){
+messages=[];
+$("chatArea").innerHTML="";
+$("home").style.display="flex";
+$("chatArea").style.display="none";
+$("chatComposer").style.display="none";
 }
-function escapeHTML(s){return s.replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]))}
-function openProject(id){
- activeProject=id;
- const p=projects.find(x=>x.id===id);
- if(!p)return;
- const tasks=p.tasks.map((t,i)=>`<div class="task ${p.done.includes(i)?"done":""}"><input type="checkbox" ${p.done.includes(i)?"checked":""} onchange="toggleTask(${id},${i})"><label>${escapeHTML(t)}</label></div>`).join("");
- const name=escapeHTML(p.name);
- document.getElementById("allProjects").innerHTML=`<button class="secondary" onclick="render()">← Retour</button><div class="project"><h3>${name}</h3><p>Plan d'action</p>${tasks}<button class="secondary" style="margin-top:14px" onclick="addTask(${id})">+ Ajouter une tâche</button></div>`;
+function addMessage(role,content,record=true){
+if(record)messages.push({role,content});
+let row=document.createElement("div");
+row.className="message "+(role==="user"?"user":"");
+let av=document.createElement("div");
+av.className="msg-avatar";
+av.textContent="D";
+let body=document.createElement("div");
+body.className="msg-body";
+body.textContent=content;
+row.append(av,body);
+$("chatArea").appendChild(row);
+$("chatArea").scrollTop=$("chatArea").scrollHeight;
+return body;
 }
-function toggleTask(id,index){
- const p=projects.find(x=>x.id===id);
- if(p.done.includes(index))p.done=p.done.filter(x=>x!==index);else p.done.push(index);
- save();openProject(id);
+async function sendMessage(value){
+let text=value.trim();
+if(!text)return;
+showChat();
+addMessage("user",text);
+$("prompt").value="";
+$("chatPrompt").value="";
+$("send").disabled=true;
+$("chatSend").disabled=true;
+let wait=addMessage("assistant","DO IT réfléchit…");
+wait.classList.add("typing");
+try{
+let response=await fetch(API_URL,{
+method:"POST",
+headers:{"Content-Type":"application/json"},
+body:JSON.stringify({message:text})
+});
+let raw=await response.text(),data;
+try{data=JSON.parse(raw)}
+catch{throw new Error("Réponse serveur illisible. Réessaie dans un instant.")}
+if(!response.ok)throw new Error(data.error||"Service momentanément indisponible.");
+wait.classList.remove("typing");
+wait.textContent=data.answer||"Je n'ai pas reçu de réponse exploitable.";
+messages[messages.length-1].content=wait.textContent;
+}catch(e){
+wait.classList.remove("typing");
+wait.textContent="Je rencontre un problème technique : "+e.message;
+messages[messages.length-1].content=wait.textContent;
 }
-function addTask(id){
- const task=prompt("Quelle tâche veux-tu ajouter ?");
- if(!task||!task.trim())return;
- const p=projects.find(x=>x.id===id);
- p.tasks.push(task.trim());save();openProject(id);
+let first=messages.find(m=>m.role==="user")?.content||"Nouvelle conversation";
+chats.unshift({title:titleFrom(first),messages:[...messages]});
+save();
 }
-
-async function sendMessage(e) {
-  e.preventDefault();
-
-  const input = document.getElementById("chatInput");
-  const value = input.value.trim();
-  if (!value) return;
-
-  const box = document.getElementById("chatBox");
-
-  box.innerHTML += `<div class="message user">${escapeHTML(value)}</div>`;
-  input.value = "";
-
-  const loading = document.createElement("div");
-  loading.className = "message bot";
-  loading.textContent = "DO IT réfléchit...";
-  box.appendChild(loading);
-  box.scrollTop = box.scrollHeight;
-
-  try {
-    const response = await fetch(
-      "https://do-it-api.youssef-norzamane.workers.dev",
-      {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json"
-        },
-        body: JSON.stringify({ message: value })
-      }
-    );
-
-    const data = await response.json();
-
-    if (!response.ok) {
-      throw new Error(data.error || "Erreur serveur");
-    }
-
-    if (typeof data.answer !== "string") {
-      throw new Error("Réponse du serveur invalide");
-    }
-
-    loading.textContent = data.answer;
-
-  } catch (error) {
-    loading.textContent = "Erreur : " + error.message;
-  }
-
-  box.scrollTop = box.scrollHeight;
+function loadChat(i){
+messages=[...(chats[i].messages||[])];
+showChat();
+$("chatArea").innerHTML="";
+messages.forEach(m=>addMessage(m.role,m.content,false));
 }
-
-function clearProjects(){
- if(confirm("Effacer tous tes projets enregistrés sur cet appareil ?")){
- projects=[];save();
- }
+function enabled(input,button){button.disabled=!input.value.trim()}
+$("prompt").addEventListener("input",()=>enabled($("prompt"),$("send")));
+$("chatPrompt").addEventListener("input",()=>enabled($("chatPrompt"),$("chatSend")));
+$("send").onclick=()=>sendMessage($("prompt").value);
+$("chatSend").onclick=()=>sendMessage($("chatPrompt").value);
+[$("prompt"),$("chatPrompt")].forEach(el=>el.addEventListener("keydown",e=>{
+if(e.key==="Enter"&&!e.shiftKey){e.preventDefault();sendMessage(el.value)}
+}));
+document.querySelectorAll(".suggestion").forEach(b=>b.onclick=()=>sendMessage(b.dataset.prompt));
+$("newChat").onclick=showHome;
+$("projectsNav").onclick=()=>alert("La gestion des projets sera ajoutée dans une prochaine étape.");
+$("historyNav").onclick=()=>alert("Les conversations récentes sont dans le menu.");
+$("settingsBtn").onclick=()=>alert("Les paramètres seront ajoutés dans une prochaine version.");
+$("sidebarToggle").onclick=()=>{
+let s=document.querySelector(".sidebar");
+if(innerWidth<700){
+s.style.display=s.style.display==="flex"?"none":"flex";
+s.style.position="absolute";s.style.zIndex="5";s.style.height="100vh";s.style.boxShadow="8px 0 30px #0001";
+}else{
+s.style.width=s.style.width==="72px"?"252px":"72px";
+s.style.overflow="hidden";
 }
-render();
+};
+$("themeToggle").onclick=()=>{
+dark=!dark;
+let r=document.documentElement.style;
+r.setProperty("--bg",dark?"#171717":"#fff");
+r.setProperty("--panel",dark?"#1d1d1d":"#fff");
+r.setProperty("--soft",dark?"#292929":"#f7f7f8");
+r.setProperty("--text",dark?"#f5f5f5":"#171717");
+r.setProperty("--muted",dark?"#aaa":"#777");
+r.setProperty("--line",dark?"#333":"#e8e8e8");
+document.querySelectorAll(".composer").forEach(el=>el.style.borderColor=dark?"#383838":"");
+$("themeToggle").textContent=dark?"☀":"◐";
+};
+renderRecent();
 </script>
 </body>
 </html>
