@@ -1,0 +1,203 @@
+
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#090d18">
+<title>DO IT — Tu imagines. On réalise.</title>
+<style>
+:root{--bg:#090d18;--panel:#111827;--panel2:#172235;--blue:#397bff;--text:#f4f7ff;--muted:#8d9bb2;--line:#26344a}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}
+button,input{font:inherit}
+button{cursor:pointer}
+.app{max-width:1100px;margin:auto;padding:22px}
+header{display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid var(--line);padding:10px 0 22px}
+.logo{font-size:25px;font-weight:900;letter-spacing:2px}
+.logo span{color:#5790ff}
+.tag{color:var(--muted);font-size:12px;margin-top:4px}
+.status{font-size:12px;color:#76e5b0;background:#143326;padding:8px 12px;border-radius:30px}
+.hero{padding:48px 0 30px}
+.eyebrow{color:#76a5ff;font-size:12px;letter-spacing:2px;font-weight:700}
+h1{font-size:clamp(34px,7vw,62px);line-height:1.08;margin:15px 0}
+h1 span{color:#5790ff}
+p{color:var(--muted);line-height:1.6}
+.hero p{max-width:560px}
+.layout{display:grid;grid-template-columns:220px 1fr;gap:20px}
+nav,.panel,.project{background:var(--panel);border:1px solid var(--line);border-radius:16px}
+nav{padding:12px;height:max-content}
+nav button{width:100%;text-align:left;border:0;background:transparent;color:var(--muted);padding:14px;border-radius:10px;margin:3px 0}
+nav button.active,nav button:hover{background:var(--panel2);color:white}
+main{min-width:0}
+.panel{padding:22px;margin-bottom:16px}
+.panel h2{margin:0 0 8px;font-size:21px}
+.section-head{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-bottom:18px}
+.primary{background:var(--blue);color:white;border:0;padding:12px 17px;border-radius:10px;font-weight:700}
+.secondary{background:var(--panel2);color:white;border:1px solid var(--line);padding:11px 14px;border-radius:10px}
+input{width:100%;padding:14px;background:#0c1423;color:white;border:1px solid var(--line);border-radius:10px;outline:none}
+input:focus{border-color:var(--blue)}
+.project{padding:18px;margin:12px 0}
+.project-top{display:flex;justify-content:space-between;gap:10px}
+.project h3{margin:0 0 6px}
+.pill{font-size:11px;color:#91b6ff;background:#1a3158;padding:6px 9px;border-radius:20px;white-space:nowrap}
+.progress{height:6px;background:#26344a;border-radius:10px;margin:15px 0 8px;overflow:hidden}
+.progress div{height:100%;background:var(--blue);width:0%}
+.small{font-size:12px;color:var(--muted)}
+.chat{height:300px;overflow:auto;background:#0c1423;border:1px solid var(--line);border-radius:12px;padding:14px;margin:15px 0}
+.message{padding:12px 14px;border-radius:12px;margin:9px 0;max-width:88%;line-height:1.5;font-size:14px}
+.bot{background:#19263b}
+.user{background:#214c9a;margin-left:auto}
+.chat-form{display:flex;gap:9px}
+.chat-form input{flex:1;min-width:0}
+.task{display:flex;align-items:center;gap:10px;padding:12px 0;border-bottom:1px solid var(--line)}
+.task input{width:18px;height:18px;accent-color:var(--blue)}
+.task label{flex:1;font-size:14px}
+.task.done label{text-decoration:line-through;color:var(--muted)}
+.hidden{display:none!important}
+footer{text-align:center;color:var(--muted);font-size:12px;padding:30px}
+@media(max-width:650px){.app{padding:16px}.layout{grid-template-columns:1fr}nav{display:flex;overflow:auto;padding:7px}nav button{white-space:nowrap;width:auto;margin:0}.hero{padding:32px 0 20px}.panel{padding:17px}}
+</style>
+</head>
+<body>
+<div class="app">
+<header>
+ <div><div class="logo">DO <span>IT.</span></div><div class="tag">Tu imagines. On réalise.</div></div>
+ <div class="status">● Prototype actif</div>
+</header>
+
+<section class="hero">
+ <div class="eyebrow">TON ASSISTANT DE PROJETS</div>
+ <h1>Une idée ?<br><span>On passe à l'action.</span></h1>
+ <p>Décris ce que tu veux accomplir. DO IT t'aide à structurer ton projet, organiser les étapes et suivre ton avancement.</p>
+</section>
+
+<div class="layout">
+<nav>
+ <button class="active" data-page="home">⌂ Accueil</button>
+ <button data-page="chat">✦ Assistant</button>
+ <button data-page="projects">▤ Mes projets</button>
+ <button data-page="settings">⚙ Paramètres</button>
+</nav>
+
+<main>
+<section id="home" class="page">
+ <div class="panel">
+  <div class="section-head"><div><h2>Bienvenue sur DO IT.</h2><p>Quel projet veux-tu réaliser aujourd'hui ?</p></div></div>
+  <input id="idea" placeholder="Ex : Créer mon entreprise, organiser un voyage...">
+  <button class="primary" style="margin-top:12px" onclick="createFromIdea()">Lancer mon projet →</button>
+ </div>
+ <div class="panel">
+  <div class="section-head"><h2>Mes projets</h2><button class="secondary" onclick="showPage('projects')">Tout voir</button></div>
+  <div id="homeProjects"></div>
+ </div>
+</section>
+
+<section id="chat" class="page hidden">
+ <div class="panel">
+  <h2>✦ Assistant DO IT</h2>
+  <p>Explique-moi ton idée. Nous allons la transformer en plan d'action.</p>
+  <div class="chat" id="chatBox">
+   <div class="message bot">Bonjour ! Je suis l'assistant de démonstration DO IT. Quel projet souhaites-tu réaliser ?</div>
+  </div>
+  <form class="chat-form" onsubmit="sendMessage(event)">
+   <input id="chatInput" placeholder="Écris ton message..." autocomplete="off">
+   <button class="primary">Envoyer</button>
+  </form>
+ </div>
+</section>
+
+<section id="projects" class="page hidden">
+ <div class="panel">
+  <div class="section-head"><h2>Mes projets</h2><button class="primary" onclick="newProject()">+ Nouveau</button></div>
+  <div id="allProjects"></div>
+ </div>
+</section>
+
+<section id="settings" class="page hidden">
+ <div class="panel">
+  <h2>Paramètres</h2>
+  <p>DO IT — Version prototype 0.1</p>
+  <p>Les projets de cette démonstration sont enregistrés sur cet appareil.</p>
+  <button class="secondary" onclick="clearProjects()">Effacer les projets</button>
+ </div>
+</section>
+</main>
+</div>
+<footer>DO IT © 2026 · Tu imagines. On réalise.</footer>
+</div>
+
+<script>
+let projects=JSON.parse(localStorage.getItem("doit_projects")||"[]");
+let activeProject=null;
+
+function save(){localStorage.setItem("doit_projects",JSON.stringify(projects));render()}
+function showPage(id){
+ document.querySelectorAll(".page").forEach(p=>p.classList.add("hidden"));
+ document.getElementById(id).classList.remove("hidden");
+ document.querySelectorAll("nav button").forEach(b=>b.classList.toggle("active",b.dataset.page===id));
+}
+document.querySelectorAll("nav button").forEach(b=>b.addEventListener("click",()=>showPage(b.dataset.page)));
+
+function createFromIdea(){
+ const input=document.getElementById("idea");
+ const name=input.value.trim();
+ if(!name){input.focus();return}
+ projects.unshift({id:Date.now(),name,tasks:["Définir précisément l'objectif","Préparer un plan d'action","Réaliser la première étape"],done:[],created:new Date().toLocaleDateString("fr-FR")});
+ input.value="";
+ save();showPage("projects");
+}
+function newProject(){
+ const name=prompt("Quel est le nom de ton projet ?");
+ if(!name||!name.trim())return;
+ projects.unshift({id:Date.now(),name:name.trim(),tasks:["Définir l'objectif","Préparer les étapes","Passer à l'action"],done:[],created:new Date().toLocaleDateString("fr-FR")});
+ save();
+}
+function render(){
+ const card=p=>{
+  const progress=p.tasks.length?Math.round(p.done.length/p.tasks.length*100):0;
+  return `<div class="project"><div class="project-top"><div><h3>${escapeHTML(p.name)}</h3><div class="small">Créé le ${p.created}</div></div><span class="pill">${progress}% terminé</span></div><div class="progress"><div style="width:${progress}%"></div></div><button class="secondary" onclick="openProject(${p.id})">Ouvrir le projet →</button></div>`;
+ };
+ document.getElementById("homeProjects").innerHTML=projects.length?projects.slice(0,2).map(card).join(""):"<p>Aucun projet pour le moment. Lance ta première idée !</p>";
+ document.getElementById("allProjects").innerHTML=projects.length?projects.map(card).join(""):"<p>Tes projets apparaîtront ici.</p>";
+}
+function escapeHTML(s){return s.replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]))}
+function openProject(id){
+ activeProject=id;
+ const p=projects.find(x=>x.id===id);
+ if(!p)return;
+ const tasks=p.tasks.map((t,i)=>`<div class="task ${p.done.includes(i)?"done":""}"><input type="checkbox" ${p.done.includes(i)?"checked":""} onchange="toggleTask(${id},${i})"><label>${escapeHTML(t)}</label></div>`).join("");
+ const name=escapeHTML(p.name);
+ document.getElementById("allProjects").innerHTML=`<button class="secondary" onclick="render()">← Retour</button><div class="project"><h3>${name}</h3><p>Plan d'action</p>${tasks}<button class="secondary" style="margin-top:14px" onclick="addTask(${id})">+ Ajouter une tâche</button></div>`;
+}
+function toggleTask(id,index){
+ const p=projects.find(x=>x.id===id);
+ if(p.done.includes(index))p.done=p.done.filter(x=>x!==index);else p.done.push(index);
+ save();openProject(id);
+}
+function addTask(id){
+ const task=prompt("Quelle tâche veux-tu ajouter ?");
+ if(!task||!task.trim())return;
+ const p=projects.find(x=>x.id===id);
+ p.tasks.push(task.trim());save();openProject(id);
+}
+function sendMessage(e){
+ e.preventDefault();
+ const input=document.getElementById("chatInput");
+ const value=input.value.trim();
+ if(!value)return;
+ const box=document.getElementById("chatBox");
+ box.innerHTML+=`<div class="message user">${escapeHTML(value)}</div>`;
+ input.value="";
+ box.innerHTML+=`<div class="message bot">Merci pour ces précisions ! Pour avancer, je te propose de définir ton objectif, de découper le projet en étapes, puis de commencer par la première action. Cette réponse est une simulation : l'IA connectée sera intégrée dans une prochaine version.</div>`;
+ box.scrollTop=box.scrollHeight;
+}
+function clearProjects(){
+ if(confirm("Effacer tous tes projets enregistrés sur cet appareil ?")){
+ projects=[];save();
+ }
+}
+render();
+</script>
+</body>
+</html>
