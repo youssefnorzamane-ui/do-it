@@ -181,16 +181,51 @@ function addTask(id){
  const p=projects.find(x=>x.id===id);
  p.tasks.push(task.trim());save();openProject(id);
 }
-function sendMessage(e){
- e.preventDefault();
- const input=document.getElementById("chatInput");
- const value=input.value.trim();
- if(!value)return;
- const box=document.getElementById("chatBox");
- box.innerHTML+=`<div class="message user">${escapeHTML(value)}</div>`;
- input.value="";
- box.innerHTML+=`<div class="message bot">Merci pour ces précisions ! Pour avancer, je te propose de définir ton objectif, de découper le projet en étapes, puis de commencer par la première action. Cette réponse est une simulation : l'IA connectée sera intégrée dans une prochaine version.</div>`;
- box.scrollTop=box.scrollHeight;
+
+async function sendMessage(e){
+  e.preventDefault();
+
+  const input = document.getElementById("chatInput");
+  const value = input.value.trim();
+  if(!value) return;
+
+  const box = document.getElementById("chatBox");
+
+  box.innerHTML += `<div class="message user">${escapeHTML(value)}</div>`;
+  input.value = "";
+
+  box.innerHTML += `<div class="message bot" id="loading">DO IT réfléchit...</div>`;
+  box.scrollTop = box.scrollHeight;
+
+  try {
+    const response = await fetch(
+      "https://do-it.youssef-norzamane.workers.dev/",
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({ message: value })
+      }
+    );
+
+    const data = await response.json();
+    document.getElementById("loading")?.remove();
+
+    if(!response.ok) {
+      throw new Error(data.error || "Erreur de connexion");
+    }
+
+    box.innerHTML += `<div class="message bot">${escapeHTML(data.answer)}</div>`;
+
+  } catch(error) {
+    document.getElementById("loading")?.remove();
+    box.innerHTML += `<div class="message bot">Erreur : ${escapeHTML(error.message)}</div>`;
+  }
+
+  box.scrollTop = box.scrollHeight;
+}
+
 }
 function clearProjects(){
  if(confirm("Effacer tous tes projets enregistrés sur cet appareil ?")){
