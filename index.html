@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="fr">
 <head>
@@ -82,7 +81,7 @@ header{
   letter-spacing:1.6px;margin-bottom:5px;font-weight:700;
 }
 
-/* ELYO ORB IN THE CONVERSATION */
+/* ELYO ORB */
 .avatar{
   flex:0 0 43px;width:43px;height:43px;
   position:relative;display:grid;place-items:center;
@@ -121,11 +120,74 @@ header{
 .eye{
   width:3px;height:5px;background:#30264f;border-radius:50%;
   animation:blink 5s infinite;
+  transition:all .25s ease;
 }
 .mouth{
   width:6px;height:3px;
   border-bottom:1.3px solid #30264f;border-radius:50%;
+  transition:all .25s ease;
 }
+
+/* EXPRESSION : HEUREUX */
+.emotion-happy .eye{
+  height:3px;
+  border-radius:50% 50% 0 0;
+  transform:scaleY(.7);
+}
+.emotion-happy .mouth{
+  width:10px;height:5px;
+  border-bottom:2px solid #30264f;
+}
+
+/* EXPRESSION : CURIEUX */
+.emotion-curious .eye{
+  width:4px;height:6px;
+}
+.emotion-curious .mouth{
+  width:5px;height:5px;
+  border:1.4px solid #30264f;
+  border-radius:50%;
+}
+
+/* EXPRESSION : CONCENTRÉ */
+.emotion-focused .eye{
+  width:4px;height:3px;
+  border-radius:2px;
+}
+.emotion-focused .mouth{
+  width:5px;height:2px;
+  border-bottom:1.5px solid #30264f;
+}
+
+/* EXPRESSION : SURPRIS */
+.emotion-surprised .eye{
+  width:4px;height:7px;
+}
+.emotion-surprised .mouth{
+  width:5px;height:7px;
+  border:1.4px solid #30264f;
+  border-radius:50%;
+}
+
+/* EXPRESSION : APAISÉ */
+.emotion-calm .eye{
+  height:2px;width:4px;
+  border-radius:50% 50% 0 0;
+}
+.emotion-calm .mouth{
+  width:7px;height:3px;
+  border-bottom:1.3px solid #30264f;
+}
+
+/* EXPRESSION : PARLANT */
+.emotion-talking .mouth{
+  width:7px;height:6px;
+  border:1.5px solid #30264f;
+  background:#30264f;
+  border-radius:50%;
+  animation:mouthTalk .3s ease-in-out infinite alternate;
+}
+
 .message-row.thinking .orb{
   animation:think 1.5s ease-in-out infinite,morph 5s infinite;
 }
@@ -139,6 +201,7 @@ header{
   color:#aaa4bd;font-size:13px;
   animation:pulse 1.3s infinite;
 }
+
 @keyframes float{
   0%,100%{transform:translateY(0) rotate(-3deg)}
   50%{transform:translateY(-4px) rotate(4deg)}
@@ -162,6 +225,10 @@ header{
 @keyframes talk{
   0%,100%{transform:scale(1)}
   50%{transform:scale(1.08,.95)}
+}
+@keyframes mouthTalk{
+  from{transform:scaleY(.7)}
+  to{transform:scaleY(1.3)}
 }
 @keyframes pulse{50%{opacity:.4}}
 
@@ -316,9 +383,10 @@ let history=[];
 let advanced=false;
 let fileContent="";
 
-function makeAvatar(){
+/* CRÉATION DE LA SPHÈRE */
+function makeAvatar(expression="calm"){
   const avatar=document.createElement("div");
-  avatar.className="avatar";
+  avatar.className="avatar emotion-"+expression;
   avatar.innerHTML=`
     <div class="halo"></div>
     <div class="orb">
@@ -330,16 +398,75 @@ function makeAvatar(){
   return avatar;
 }
 
+function setExpression(row,expression){
+  const avatar=row.querySelector(".avatar");
+  if(!avatar)return;
+
+  avatar.className="avatar emotion-"+expression;
+}
+
+/* PREMIÈRE DÉTECTION CONTEXTUELLE */
+function detectEmotion(userText,answer){
+  const text=(userText+" "+answer)
+    .toLowerCase()
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g,"");
+
+  const contains=words=>words.some(word=>text.includes(word));
+
+  if(contains([
+    "je suis triste","je vais mal","je suis stresse",
+    "j'ai peur","je suis inquiet","je suis fatigue",
+    "je suis decu","c'est difficile","ca ne va pas"
+  ])){
+    return "calm";
+  }
+
+  if(contains([
+    "surprise","incroyable","impressionnant",
+    "je n'en reviens pas","wow","oh la la"
+  ]) || /!{2,}/.test(text)){
+    return "surprised";
+  }
+
+  if(contains([
+    "bravo","felicitations","excellent",
+    "genial","super nouvelle","je suis content",
+    "trop bien","bien joue","magnifique"
+  ])){
+    return "happy";
+  }
+
+  if(userText.includes("?") || contains([
+    "pourquoi","comment","est-ce que",
+    "explique-moi","je me demande"
+  ])){
+    return "curious";
+  }
+
+  if(contains([
+    "plan","projet","objectif","etape",
+    "code","developpement","travail",
+    "organiser","construire","solution"
+  ])){
+    return "focused";
+  }
+
+  return "calm";
+}
+
 function scrollChat(){
   requestAnimationFrame(()=>{chat.scrollTop=chat.scrollHeight;});
 }
 
-function displayMessage(role,text){
+function displayMessage(role,text,expression){
   const row=document.createElement("div");
   row.className="message-row "+role;
 
   if(role==="ai"){
-    row.appendChild(makeAvatar());
+    const emotion=expression||"calm";
+    row.appendChild(makeAvatar(emotion));
+
     const bubble=document.createElement("div");
     bubble.className="message ai";
 
@@ -370,9 +497,10 @@ function save(){
 }
 
 function addMessage(role,text){
-  history.push({role,text});
+  const expression=role==="ai"?"calm":undefined;
+  history.push({role,text,expression});
   save();
-  displayMessage(role,text);
+  displayMessage(role,text,expression);
 }
 
 function restore(){
@@ -382,9 +510,9 @@ function restore(){
   }catch(e){history=[];}
 
   if(history.length){
-    history.forEach(m=>displayMessage(m.role,m.text));
+    history.forEach(m=>displayMessage(m.role,m.text,m.expression));
   }else{
-    displayMessage("ai","Salut ! Je suis là. On fait quoi aujourd'hui ?");
+    displayMessage("ai","Salut ! Je suis là. On fait quoi aujourd'hui ?","happy");
   }
 }
 
@@ -465,19 +593,22 @@ async function sendMessage(){
 
   sendButton.disabled=true;
 
-  // La sphère d'ELYO apparaît directement dans le fil.
+  /* ELYO RÉFLÉCHIT */
   const typingRow=document.createElement("div");
   typingRow.className="message-row ai thinking";
-  typingRow.appendChild(makeAvatar());
+  typingRow.appendChild(makeAvatar("focused"));
 
   const typingBubble=document.createElement("div");
   typingBubble.className="message ai";
+
   const typingLabel=document.createElement("span");
   typingLabel.className="message-label";
   typingLabel.textContent="ELYO";
+
   const typingText=document.createElement("div");
   typingText.className="typing-text";
   typingText.textContent="Je réfléchis...";
+
   typingBubble.append(typingLabel,typingText);
   typingRow.appendChild(typingBubble);
   messagesBox.appendChild(typingRow);
@@ -500,20 +631,37 @@ async function sendMessage(){
     if(!response.ok)throw new Error(data.error||"Erreur du serveur");
 
     const answer=data.answer||data.response||data.text||"Je n'ai pas reçu de réponse.";
-    const answerRow=displayMessage("ai",answer);
+
+    /* ELYO CHOISIT SON EXPRESSION */
+    const expression=detectEmotion(text,answer);
+
+    const answerRow=displayMessage("ai",answer,expression);
+
+    /* ANIMATION PENDANT LA RÉPONSE */
     answerRow.classList.add("talking");
+    setExpression(answerRow,"talking");
 
-    setTimeout(()=>answerRow.classList.remove("talking"),1800);
+    setTimeout(()=>{
+      answerRow.classList.remove("talking");
+      setExpression(answerRow,expression);
+    },1800);
 
-    history.push({role:"ai",text:answer});
+    history.push({
+      role:"ai",
+      text:answer,
+      expression:expression
+    });
     save();
 
   }catch(error){
     typingRow.remove();
+
     const message=error.name==="AbortError"
       ?"La réponse prend trop de temps. Réessaie dans quelques instants."
       :"Je rencontre un problème de connexion. Réessaie dans quelques instants.";
+
     addMessage("ai",message);
+
   }finally{
     clearTimeout(timer);
     sendButton.disabled=false;
@@ -555,7 +703,7 @@ function clearHistory(){
     history=[];
     save();
     messagesBox.innerHTML="";
-    displayMessage("ai","Salut ! Je suis là. On fait quoi aujourd'hui ?");
+    displayMessage("ai","Salut ! Je suis là. On fait quoi aujourd'hui ?","happy");
     closeHistory();
   }
 }
