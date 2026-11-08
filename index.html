@@ -1,4 +1,3 @@
-
 <!doctype html>
 <html lang="fr">
 <head>
@@ -209,7 +208,10 @@ try{
 let response=await fetch(API_URL,{
 method:"POST",
 headers:{"Content-Type":"application/json"},
-body:JSON.stringify({message:text})
+body:JSON.stringify({
+message:text,
+history:messages.slice(0,-2)
+})
 });
 let raw=await response.text(),data;
 try{data=JSON.parse(raw)}
