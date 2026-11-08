@@ -1,276 +1,481 @@
-<!doctype html>
+
+<!DOCTYPE html>
 <html lang="fr">
 <head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
-<meta name="theme-color" content="#ffffff">
-<title>DO IT — Tu imagines. On réalise.</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#090914">
+<title>ELYO — Ton compagnon</title>
 <style>
-:root{color-scheme:light;--bg:#fff;--panel:#fff;--soft:#f7f7f8;--text:#171717;--muted:#777;--line:#e8e8e8;--accent:#171717;--accentText:#fff}
+:root{
+  --bg:#090914;
+  --panel:#151426;
+  --purple:#a58aff;
+  --blue:#75d8ff;
+  --text:#f7f4ff;
+  --muted:#9691aa;
+  --line:rgba(255,255,255,.09);
+}
 *{box-sizing:border-box}
-body{margin:0;background:var(--bg);color:var(--text);font:15px/1.5 Inter,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}
+body{
+  margin:0;min-height:100vh;
+  background:
+    radial-gradient(ellipse at 50% 35%,#29204b 0%,#111020 38%,#090914 76%);
+  color:var(--text);
+  font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+  overflow:hidden;
+}
 button,textarea{font:inherit}
 button{cursor:pointer}
-.app{min-height:100vh;display:flex}
-.sidebar{width:252px;border-right:1px solid var(--line);padding:18px 14px;display:flex;flex-direction:column;gap:18px;flex-shrink:0;background:var(--panel)}
-.brand{display:flex;align-items:center;gap:10px;padding:3px 7px;font-weight:700;font-size:17px}
-.logo{height:30px;width:30px;border-radius:9px;background:#171717;color:#fff;display:grid;place-items:center}
-.newchat{border:1px solid var(--line);background:var(--panel);border-radius:10px;padding:10px 12px;text-align:left;color:var(--text);display:flex;gap:10px}
-.navtitle{font-size:11px;color:#999;text-transform:uppercase;letter-spacing:.08em;padding:0 8px;margin:4px 0}
-.navitem{border:0;background:transparent;text-align:left;padding:9px 10px;border-radius:9px;color:var(--muted);width:100%;display:flex;gap:10px;align-items:center}
-.navitem:hover,.newchat:hover{background:var(--soft)}
-.sidebar-bottom{margin-top:auto;border-top:1px solid var(--line);padding-top:12px}
-.profile{display:flex;align-items:center;gap:10px;padding:8px}
-.avatar{height:30px;width:30px;border-radius:50%;background:#eee;display:grid;place-items:center;font-size:12px;font-weight:600}
-.main{min-width:0;flex:1;display:flex;flex-direction:column;min-height:100vh}
-.topbar{height:58px;border-bottom:1px solid var(--line);display:flex;align-items:center;justify-content:space-between;padding:0 24px}
-.top-left{display:flex;align-items:center;gap:12px}
-.mobile-brand{display:none;font-weight:700}
-.iconbtn{height:36px;width:36px;border:0;background:transparent;border-radius:9px;color:var(--muted);display:grid;place-items:center}
-.iconbtn:hover{background:var(--soft)}
-.content{width:min(760px,calc(100% - 36px));margin:0 auto;flex:1;display:flex;flex-direction:column;justify-content:center;padding:54px 0 36px}
-.welcome{text-align:center;margin-bottom:34px}
-.welcome h1{font-size:clamp(27px,4vw,36px);line-height:1.2;letter-spacing:-1.2px;margin:0 0 12px;font-weight:650}
-.welcome p{color:var(--muted);margin:0;font-size:15px}
-.composer{border:1px solid #dedede;border-radius:18px;padding:15px 16px 12px;background:var(--panel)}
-.composer:focus-within{border-color:#bdbdbd;box-shadow:0 0 0 3px #00000008}
-textarea{width:100%;border:0;outline:0;resize:none;min-height:55px;max-height:180px;color:var(--text);background:transparent;font-size:15px;line-height:1.5}
-textarea::placeholder{color:#a0a0a0}
-.composer-actions{display:flex;align-items:center;justify-content:space-between}
-.action-left{display:flex;gap:5px}
-.send{height:36px;width:36px;border:0;border-radius:11px;background:var(--accent);color:var(--accentText);display:grid;place-items:center}
-.send:disabled{opacity:.35;cursor:default}
-.suggestions{margin-top:30px}
-.suggestions-label{font-size:11px;letter-spacing:.09em;color:#999;font-weight:600;margin:0 0 12px 2px}
-.suggestion-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
-.suggestion{border:1px solid var(--line);border-radius:13px;background:var(--panel);padding:13px 14px;text-align:left;display:flex;gap:11px;align-items:flex-start;min-height:76px;color:var(--text)}
-.suggestion:hover{background:var(--soft);border-color:#d5d5d5}
-.s-icon{height:32px;width:32px;border-radius:9px;background:var(--soft);display:grid;place-items:center;flex-shrink:0;color:var(--muted)}
-.s-title{font-weight:600;font-size:13px;display:block;margin-bottom:2px}
-.s-desc{font-size:12px;color:var(--muted);display:block}
-.footer-note{text-align:center;color:#aaa;font-size:11px;margin-top:28px}
-.chat-area{display:none;width:min(760px,calc(100% - 36px));margin:0 auto;flex:1;padding:32px 0;overflow:auto}
-.message{padding:16px 0;display:flex;gap:13px;align-items:flex-start}
-.msg-avatar{width:30px;height:30px;border-radius:50%;background:var(--soft);display:grid;place-items:center;flex-shrink:0;font-size:12px;font-weight:700}
-.msg-body{white-space:pre-wrap;overflow-wrap:anywhere;padding-top:3px;max-width:calc(100% - 45px)}
-.user .msg-avatar{background:#171717;color:#fff}
-.user .msg-body{font-weight:500}
-.typing{color:#888;font-size:13px}
-.chat-composer{width:min(760px,calc(100% - 36px));margin:0 auto 22px}
-.chat-composer .composer{box-shadow:0 3px 16px #0000000f}
-@media(max-width:700px){
-.sidebar{display:none}
-.topbar{height:54px;padding:0 14px}
-.mobile-brand{display:block}
-.content{padding:40px 0 28px}
-.suggestion-grid{grid-template-columns:1fr}
-.suggestion{min-height:66px}
-.welcome{margin-bottom:28px}
-.chat-composer{margin-bottom:12px}
+.app{height:100dvh;display:flex;flex-direction:column;max-width:1500px;margin:auto}
+.top{
+  height:66px;flex-shrink:0;padding:0 25px;
+  display:flex;align-items:center;justify-content:space-between;
+  border-bottom:1px solid var(--line);
+}
+.logo{
+  font-size:22px;font-weight:800;letter-spacing:5px;
+  background:linear-gradient(100deg,#fff,#b6a1ff,#79d9ff);
+  color:transparent;background-clip:text;
+}
+.top-right{display:flex;align-items:center;gap:10px}
+.online{font-size:11px;color:#a9a3ba;display:flex;align-items:center;gap:7px}
+.dot{width:7px;height:7px;background:#7be4b4;border-radius:50%;box-shadow:0 0 12px #7be4b4}
+.icon-btn{
+  border:1px solid var(--line);background:#ffffff09;color:#ddd8ee;
+  border-radius:12px;padding:9px 12px;
+}
+.stage{
+  flex:1;min-height:0;position:relative;
+  display:flex;flex-direction:column;align-items:center;
+  justify-content:center;padding:12px 20px 135px;
+  overflow:hidden;
+}
+.ambient{
+  position:absolute;width:min(80vw,650px);aspect-ratio:1;
+  border-radius:50%;pointer-events:none;
+  background:radial-gradient(circle,#8c6cff17 0%,#5c9eff0a 40%,transparent 70%);
+  filter:blur(15px);
+}
+.orb-area{
+  width:270px;height:270px;position:relative;
+  display:grid;place-items:center;
+  transition:transform .8s cubic-bezier(.2,.8,.2,1),width .8s,height .8s;
+  z-index:1;
+}
+.orb-halo{
+  position:absolute;width:240px;height:240px;border-radius:50%;
+  background:radial-gradient(circle,#a88aff26,transparent 68%);
+  filter:blur(15px);animation:halo 5s ease-in-out infinite;
+}
+.orb-ring{
+  position:absolute;width:225px;height:225px;border-radius:50%;
+  border:1px solid #b8a0ff35;
+  box-shadow:0 0 35px #9271ff12,inset 0 0 25px #8b72ff0c;
+  animation:ring 18s linear infinite;
+}
+.orb-ring:before{
+  content:"";position:absolute;inset:13px;border-radius:50%;
+  border:1px solid #8ddcff20;
+}
+.orb{
+  width:170px;height:170px;position:relative;border-radius:48% 52% 53% 47% / 48% 44% 56% 52%;
+  background:
+    radial-gradient(ellipse at 28% 19%,#fff 0%,#e5dcff 3%,transparent 18%),
+    radial-gradient(ellipse at 75% 75%,#267acb 0%,transparent 43%),
+    radial-gradient(ellipse at 27% 75%,#a66cff 0%,transparent 52%),
+    linear-gradient(140deg,#d8cbff 0%,#9a78f3 43%,#4d9ce9 78%,#a4eaff 100%);
+  box-shadow:inset -18px -20px 35px #17216d55,
+    inset 12px 12px 25px #ffffff9c,
+    0 0 48px #9274ff75;
+  animation:float 5s ease-in-out infinite,morph 10s ease-in-out infinite;
+  transition:all .6s;
+}
+.orb:before{
+  content:"";position:absolute;inset:8px;border-radius:inherit;
+  background:linear-gradient(140deg,#ffffff60,transparent 42%,#6dcfff24);
+  border:1px solid #ffffff65;
+}
+.orb:after{
+  content:"";position:absolute;top:17px;left:28px;width:48px;height:22px;
+  border-radius:50%;background:#fff9;filter:blur(13px);
+}
+.face{
+  position:absolute;z-index:3;inset:0;
+  display:flex;align-items:center;justify-content:center;
+  flex-direction:column;gap:13px;padding-top:8px;
+}
+.eyes{display:flex;gap:30px}
+.eye{
+  width:10px;height:14px;background:#30264f;border-radius:50%;
+  box-shadow:0 0 7px #fff8;animation:blink 5s infinite;
+}
+.mouth{width:13px;height:7px;border-bottom:2px solid #30264f;border-radius:50%}
+.state-thinking .orb{animation:think 1.7s ease-in-out infinite,morph 5s infinite}
+.state-thinking .orb-ring{animation-duration:4s;border-color:#9b8aff88}
+.state-thinking .orb-halo{background:radial-gradient(circle,#9d75ff40,transparent 70%)}
+.state-talking .orb{animation:talk .7s ease-in-out infinite,morph 4s infinite}
+.state-talking .orb-ring{transform:scale(1.12);border-color:#7bdcff77}
+.state-working .orb-area{transform:scale(1.2)}
+.state-working .orb-ring{animation-duration:3s;border-color:#7bdcff88}
+.state-working .orb{animation:think 2s ease-in-out infinite,morph 5s infinite}
+.state-idle .orb-area{transform:scale(1)}
+@keyframes float{0%,100%{transform:translateY(0) rotate(-3deg)}50%{transform:translateY(-12px) rotate(4deg)}}
+@keyframes morph{0%,100%{border-radius:48% 52% 53% 47% / 48% 44% 56% 52%}50%{border-radius:55% 45% 46% 54% / 43% 55% 45% 57%}}
+@keyframes ring{to{transform:rotate(360deg)}}
+@keyframes halo{0%,100%{transform:scale(.9);opacity:.7}50%{transform:scale(1.12);opacity:1}}
+@keyframes blink{0%,45%,49%,100%{transform:scaleY(1)}47%{transform:scaleY(.12)}}
+@keyframes think{0%,100%{transform:scale(1) rotate(-3deg)}50%{transform:scale(1.07) rotate(4deg)}}
+@keyframes talk{0%,100%{transform:scale(1)}50%{transform:scale(1.045,.97)}}
+.intro{text-align:center;z-index:2;margin-top:5px}
+.intro h1{font-size:clamp(26px,4vw,38px);font-weight:600;letter-spacing:-1px;margin:0 0 12px}
+.gradient{background:linear-gradient(90deg,#d1c2ff,#8edcff);color:transparent;background-clip:text}
+.intro p{color:#aaa4bd;font-size:14px;margin:0}
+.state-label{
+  margin-top:20px;font-size:10px;letter-spacing:2px;color:#aaa0cb;
+  text-transform:uppercase;opacity:.8;
+}
+.messages{
+  width:min(650px,100%);max-height:32vh;overflow:auto;
+  display:flex;flex-direction:column;gap:12px;margin-top:20px;
+  scrollbar-width:thin;z-index:2;
+}
+.message{padding:13px 16px;border-radius:16px;max-width:88%;font-size:14px;line-height:1.55;white-space:pre-wrap;overflow-wrap:anywhere}
+.message.user{align-self:flex-end;background:linear-gradient(120deg,#7556ca,#4e75bb);border-bottom-right-radius:5px}
+.message.ai{align-self:flex-start;background:#ffffff0d;border:1px solid var(--line);border-bottom-left-radius:5px}
+.message small{display:block;color:#c8b9ff;font-size:10px;letter-spacing:1px;margin-bottom:5px}
+.composer-wrap{
+  position:absolute;bottom:0;left:0;right:0;z-index:10;
+  padding:16px 20px max(18px,env(safe-area-inset-bottom));
+  background:linear-gradient(transparent,#090914 24%);
+}
+.composer{width:min(720px,100%);margin:auto;position:relative}
+.input-shell{
+  display:flex;align-items:flex-end;gap:10px;padding:10px;
+  border-radius:19px;border:1px solid #a68aff55;
+  background:rgba(23,21,42,.94);backdrop-filter:blur(20px);
+  box-shadow:0 10px 40px #0007,0 0 28px #9575ff12;
+}
+.plus,.send{
+  width:43px;height:43px;flex-shrink:0;border-radius:13px;
+  display:grid;place-items:center;
+}
+.plus{font-size:25px;color:white;background:#ffffff0c;border:1px solid #ffffff20;transition:.25s}
+.plus.open{transform:rotate(45deg);background:#8e70ee}
+.send{border:0;background:linear-gradient(135deg,#a98aff,#5d9eea);color:white;font-size:20px}
+.send:disabled{opacity:.45}
+textarea{
+  flex:1;min-width:0;max-height:125px;min-height:43px;resize:none;
+  border:0;outline:0;background:transparent;color:white;
+  padding:12px 3px;font-size:14px;
+}
+textarea::placeholder{color:#8e89a4}
+.note{text-align:center;color:#77718d;font-size:10px;margin-top:9px}
+.menu{
+  display:none;position:absolute;bottom:76px;left:0;width:min(310px,90vw);
+  padding:9px;border:1px solid #ffffff1b;border-radius:17px;
+  background:#171529f5;backdrop-filter:blur(24px);
+  box-shadow:0 15px 50px #0009;animation:menuIn .2s ease;
+}
+.menu.show{display:block}
+.menu button{
+  display:flex;align-items:center;gap:12px;width:100%;padding:12px;
+  border:0;border-radius:11px;background:transparent;color:#eee9fa;
+  text-align:left;font-size:13px;
+}
+.menu button:hover{background:#ffffff12}
+.menu button span{font-size:18px;width:22px}
+.menu hr{border:0;border-top:1px solid var(--line);margin:6px}
+#fileInput{display:none}
+.history-panel{
+  position:fixed;inset:0;z-index:20;background:#05050bcc;
+  display:none;align-items:center;justify-content:center;padding:20px;
+}
+.history-panel.show{display:flex}
+.history-box{
+  width:min(420px,100%);max-height:70vh;overflow:auto;
+  padding:22px;border:1px solid var(--line);border-radius:20px;
+  background:#171529;
+}
+.history-box h2{font-size:18px}
+.history-entry{padding:12px 0;border-bottom:1px solid var(--line);font-size:13px;color:#d8d2e8}
+.history-actions{display:flex;gap:8px;margin-top:18px}
+.history-actions button{flex:1;padding:11px;border-radius:10px;border:1px solid var(--line);background:#ffffff0b;color:white}
+@media(max-width:600px){
+  .top{height:58px;padding:0 17px}
+  .logo{font-size:20px}
+  .stage{padding:0 14px 125px}
+  .orb-area{width:220px;height:220px}
+  .orb{width:145px;height:145px}
+  .orb-ring{width:200px;height:200px}
+  .composer-wrap{padding:12px 13px max(12px,env(safe-area-inset-bottom))}
+  .messages{max-height:29vh}
+  .intro h1{font-size:29px}
+  .intro p{font-size:13px}
 }
 </style>
 </head>
 <body>
 <div class="app">
-<aside class="sidebar">
-<div class="brand"><div class="logo">D</div> DO IT</div>
-<button class="newchat" id="newChat">＋ Nouvelle conversation</button>
-<div>
-<div class="navtitle">Espace de travail</div>
-<button class="navitem" id="projectsNav">▦ <span>Mes projets</span></button>
-<button class="navitem" id="historyNav">◷ <span>Historique</span></button>
+  <header class="top">
+    <div class="logo">ELYO</div>
+    <div class="top-right">
+      <div class="online"><span class="dot"></span><span id="connectionLabel">À tes côtés</span></div>
+      <button class="icon-btn" onclick="openHistory()" aria-label="Historique">◷</button>
+    </div>
+  </header>
+
+  <main class="stage state-idle" id="stage">
+    <div class="ambient"></div>
+    <div class="orb-area">
+      <div class="orb-halo"></div>
+      <div class="orb-ring"></div>
+      <div class="orb">
+        <div class="face">
+          <div class="eyes"><span class="eye"></span><span class="eye"></span></div>
+          <div class="mouth"></div>
+        </div>
+      </div>
+    </div>
+    <div class="intro" id="intro">
+      <h1>Je suis là. <span class="gradient">On fait quoi aujourd'hui ?</span></h1>
+      <p>Ton espace, tes idées, tes projets. On avance ensemble.</p>
+      <div class="state-label" id="stateLabel">ELYO EST AVEC TOI</div>
+    </div>
+    <section class="messages" id="messages"></section>
+
+    <div class="composer-wrap">
+      <div class="composer">
+        <div class="menu" id="menu">
+          <button onclick="promptText('Aide-moi à lancer une entreprise et construire un plan concret.')"><span>◈</span>Lancer un business</button>
+          <button onclick="promptText('Aide-moi à créer une application de A à Z.')"><span>▣</span>Créer une application</button>
+          <button onclick="promptText('Aide-moi à atteindre un objectif avec un plan étape par étape.')"><span>◎</span>Atteindre un objectif</button>
+          <button onclick="promptText('Explorons des idées originales et ambitieuses.')"><span>✧</span>Explorer des idées</button>
+          <hr>
+          <button onclick="document.getElementById('fileInput').click()"><span>📎</span>Ajouter un fichier texte</button>
+          <button onclick="toggleAdvanced()"><span>⌘</span><span id="advancedText">Mode avancé : désactivé</span></button>
+          <button onclick="showHistory()"><span>◷</span>Historique</button>
+        </div>
+        <div class="input-shell">
+          <button class="plus" id="plus" aria-label="Ouvrir les outils">+</button>
+          <textarea id="input" rows="1" placeholder="Parle-moi..."></textarea>
+          <button class="send" id="send" aria-label="Envoyer">↑</button>
+        </div>
+        <div class="note">ELYO apprend à te connaître, conversation après conversation.</div>
+      </div>
+      <input type="file" id="fileInput" accept=".txt,.md,.csv,.json">
+    </div>
+  </main>
 </div>
-<div>
-<div class="navtitle">Récent</div>
-<div id="recentList"></div>
+
+<div class="history-panel" id="historyPanel">
+  <div class="history-box">
+    <h2>Nos conversations</h2>
+    <div id="historyList"></div>
+    <div class="history-actions">
+      <button onclick="closeHistory()">Fermer</button>
+      <button onclick="clearHistory()">Effacer</button>
+    </div>
+  </div>
 </div>
-<div class="sidebar-bottom">
-<button class="navitem" id="settingsBtn">⚙ <span>Paramètres</span></button>
-<div class="profile">
-<div class="avatar">D</div>
-<div><div style="font-size:13px;font-weight:600">Mon espace</div><div style="font-size:11px;color:#999">DO IT</div></div>
-</div>
-</div>
-</aside>
-<main class="main">
-<header class="topbar">
-<div class="top-left">
-<button class="iconbtn" id="sidebarToggle" aria-label="Afficher le menu">☰</button>
-<div class="mobile-brand">DO IT</div>
-</div>
-<button class="iconbtn" id="themeToggle" aria-label="Changer de thème" title="Mode sombre">◐</button>
-</header>
-<section class="content" id="home">
-<div class="welcome">
-<h1>On fait quoi aujourd'hui ?</h1>
-<p>Parle-moi de ton idée. On va trouver comment la concrétiser.</p>
-</div>
-<div class="composer">
-<textarea id="prompt" rows="2" placeholder="J'ai une idée de projet..."></textarea>
-<div class="composer-actions">
-<div class="action-left">
-<button class="iconbtn" title="Ajouter un fichier" aria-label="Ajouter un fichier">＋</button>
-<button class="iconbtn" title="Joindre" aria-label="Joindre">⌁</button>
-</div>
-<button class="send" id="send" aria-label="Envoyer" disabled>↑</button>
-</div>
-</div>
-<div class="suggestions">
-<div class="suggestions-label">POUR COMMENCER</div>
-<div class="suggestion-grid">
-<button class="suggestion" data-prompt="Je veux lancer un business. Aide-moi à construire et réaliser le projet.">
-<span class="s-icon">↗</span><span><span class="s-title">Lancer un business</span><span class="s-desc">De l'idée aux premiers clients</span></span>
-</button>
-<button class="suggestion" data-prompt="J'ai un objectif personnel que je veux atteindre. Aide-moi à bâtir un plan concret.">
-<span class="s-icon">◎</span><span><span class="s-title">Atteindre un objectif</span><span class="s-desc">Construire un plan d'action</span></span>
-</button>
-<button class="suggestion" data-prompt="Je veux créer quelque chose : aide-moi à le concevoir et à le réaliser.">
-<span class="s-icon">⌘</span><span><span class="s-title">Créer quelque chose</span><span class="s-desc">Site, application, produit</span></span>
-</button>
-<button class="suggestion" data-prompt="J'aimerais réfléchir à une idée avec toi. Donne-moi ton avis honnête.">
-<span class="s-icon">☏</span><span><span class="s-title">Parler librement</span><span class="s-desc">Réfléchir ensemble</span></span>
-</button>
-</div>
-</div>
-<div class="footer-note">DO IT · Ton idée mérite d'avancer.</div>
-</section>
-<section class="chat-area" id="chatArea"></section>
-<div class="chat-composer" id="chatComposer" style="display:none">
-<div class="composer">
-<textarea id="chatPrompt" rows="2" placeholder="Continue la conversation..."></textarea>
-<div class="composer-actions">
-<div class="action-left"><button class="iconbtn" title="Ajouter un fichier">＋</button></div>
-<button class="send" id="chatSend" disabled aria-label="Envoyer">↑</button>
-</div>
-</div>
-</div>
-</main>
-</div>
+
 <script>
 const API_URL="https://do-it-api.youssef-norzamane.workers.dev/";
-const $=id=>document.getElementById(id);
-let messages=[],chats=JSON.parse(localStorage.getItem("doit_chats")||"[]"),dark=false;
+const KEY="elyo_history_v2";
+const stage=document.getElementById("stage");
+const messagesBox=document.getElementById("messages");
+const input=document.getElementById("input");
+const sendButton=document.getElementById("send");
+const menu=document.getElementById("menu");
+const plus=document.getElementById("plus");
+const intro=document.getElementById("intro");
+const stateLabel=document.getElementById("stateLabel");
+
+let history=[];
+let advanced=false;
+let fileContent="";
+
+function setState(state,label){
+  stage.className="stage state-"+state;
+  stateLabel.textContent=label;
+}
 
 function save(){
-localStorage.setItem("doit_chats",JSON.stringify(chats.slice(0,20)));
-renderRecent();
+  try{localStorage.setItem(KEY,JSON.stringify(history));}
+  catch(e){console.warn("Sauvegarde impossible",e);}
 }
-function renderRecent(){
-$("recentList").innerHTML="";
-chats.slice(0,6).forEach((c,i)=>{
-let b=document.createElement("button");
-b.className="navitem";
-b.textContent="◦ "+c.title;
-b.onclick=()=>loadChat(i);
-$("recentList").appendChild(b);
+
+function displayMessage(role,text){
+  intro.style.display="none";
+  const div=document.createElement("div");
+  div.className="message "+role;
+  const who=document.createElement("small");
+  who.textContent=role==="user"?"TOI":"ELYO";
+  const content=document.createElement("div");
+  content.textContent=text;
+  div.append(who,content);
+  messagesBox.appendChild(div);
+  messagesBox.scrollTop=messagesBox.scrollHeight;
+}
+
+function addMessage(role,text){
+  history.push({role,text});
+  save();
+  displayMessage(role,text);
+}
+
+function restore(){
+  try{
+    const stored=JSON.parse(localStorage.getItem(KEY)||"[]");
+    if(Array.isArray(stored)){
+      history=stored;
+      history.forEach(m=>displayMessage(m.role,m.text));
+    }
+  }catch(e){history=[];}
+}
+
+function promptText(text){
+  input.value=text;
+  closeMenu();
+  input.focus();
+  resizeInput();
+}
+
+function toggleAdvanced(){
+  advanced=!advanced;
+  document.getElementById("advancedText").textContent=
+    "Mode avancé : "+(advanced?"activé":"désactivé");
+  closeMenu();
+  addMessage("ai",advanced?
+    "Le mode avancé est activé. Tu peux me confier des demandes plus techniques et détaillées.":
+    "Le mode avancé est désactivé.");
+}
+
+function closeMenu(){
+  menu.classList.remove("show");
+  plus.classList.remove("open");
+}
+plus.addEventListener("click",()=>{
+  menu.classList.toggle("show");
+  plus.classList.toggle("open");
 });
-}
-function titleFrom(s){return s.length>36?s.slice(0,36)+"…":s}
-function showChat(){
-$("home").style.display="none";
-$("chatArea").style.display="block";
-$("chatComposer").style.display="block";
-}
-function showHome(){
-messages=[];
-$("chatArea").innerHTML="";
-$("home").style.display="flex";
-$("chatArea").style.display="none";
-$("chatComposer").style.display="none";
-}
-function addMessage(role,content,record=true){
-if(record)messages.push({role,content});
-let row=document.createElement("div");
-row.className="message "+(role==="user"?"user":"");
-let av=document.createElement("div");
-av.className="msg-avatar";
-av.textContent="D";
-let body=document.createElement("div");
-body.className="msg-body";
-body.textContent=content;
-row.append(av,body);
-$("chatArea").appendChild(row);
-$("chatArea").scrollTop=$("chatArea").scrollHeight;
-return body;
-}
-async function sendMessage(value){
-let text=value.trim();
-if(!text)return;
-showChat();
-addMessage("user",text);
-$("prompt").value="";
-$("chatPrompt").value="";
-$("send").disabled=true;
-$("chatSend").disabled=true;
-let wait=addMessage("assistant","DO IT réfléchit…");
-wait.classList.add("typing");
-try{
-let response=await fetch(API_URL,{
-method:"POST",
-headers:{"Content-Type":"application/json"},
-body:JSON.stringify({
-message:text,
-history:messages.slice(0,-2)
-})
+document.addEventListener("click",e=>{
+  if(!menu.contains(e.target)&&!plus.contains(e.target))closeMenu();
 });
-let raw=await response.text(),data;
-try{data=JSON.parse(raw)}
-catch{throw new Error("Réponse serveur illisible. Réessaie dans un instant.")}
-if(!response.ok)throw new Error(data.error||"Service momentanément indisponible.");
-wait.classList.remove("typing");
-wait.textContent=data.answer||"Je n'ai pas reçu de réponse exploitable.";
-messages[messages.length-1].content=wait.textContent;
-}catch(e){
-wait.classList.remove("typing");
-wait.textContent="Je rencontre un problème technique : "+e.message;
-messages[messages.length-1].content=wait.textContent;
+
+function resizeInput(){
+  input.style.height="auto";
+  input.style.height=Math.min(input.scrollHeight,125)+"px";
 }
-let first=messages.find(m=>m.role==="user")?.content||"Nouvelle conversation";
-chats.unshift({title:titleFrom(first),messages:[...messages]});
-save();
+input.addEventListener("input",resizeInput);
+input.addEventListener("keydown",e=>{
+  if(e.key==="Enter"&&!e.shiftKey){
+    e.preventDefault();
+    sendMessage();
+  }
+});
+
+document.getElementById("fileInput").addEventListener("change",async e=>{
+  const file=e.target.files[0];
+  if(!file)return;
+  if(file.size>1024*1024){
+    addMessage("ai","Le fichier dépasse 1 Mo. Essaie avec un fichier plus léger.");
+  }else{
+    fileContent=await file.text();
+    input.value="Analyse le fichier que je viens d'ajouter : "+file.name;
+    resizeInput();
+    input.focus();
+  }
+  e.target.value="";
+  closeMenu();
+});
+
+async function sendMessage(){
+  let text=input.value.trim();
+  if(!text||sendButton.disabled)return;
+  if(fileContent){
+    text+="\n\nContenu du fichier :\n"+fileContent;
+    fileContent="";
+  }
+
+  addMessage("user",text);
+  input.value="";
+  resizeInput();
+  closeMenu();
+  sendButton.disabled=true;
+  setState("thinking","ELYO RÉFLÉCHIT");
+
+  const typing=document.createElement("div");
+  typing.className="message ai";
+  typing.textContent="Je réfléchis...";
+  messagesBox.appendChild(typing);
+
+  const controller=new AbortController();
+  const timer=setTimeout(()=>controller.abort(),16000);
+
+  try{
+    const response=await fetch(API_URL,{
+      method:"POST",
+      headers:{"Content-Type":"application/json"},
+      body:JSON.stringify({message:text}),
+      signal:controller.signal
+    });
+
+    const data=await response.json();
+    typing.remove();
+
+    if(!response.ok)throw new Error(data.error||"Erreur du serveur");
+
+    const answer=data.answer||data.response||data.text||"Je n'ai pas reçu de réponse.";
+    addMessage("ai",answer);
+    setState("talking","ELYO TE RÉPOND");
+    setTimeout(()=>{
+      if(!sendButton.disabled)setState("idle","ELYO EST AVEC TOI");
+    },1800);
+
+  }catch(error){
+    typing.remove();
+    addMessage("ai",error.name==="AbortError"?
+      "La réponse prend trop de temps. Réessaie dans quelques instants.":
+      "Je rencontre un problème de connexion. Réessaie dans quelques instants.");
+    setState("idle","EN ATTENTE DE TOI");
+  }finally{
+    clearTimeout(timer);
+    sendButton.disabled=false;
+    input.focus();
+  }
 }
-function loadChat(i){
-messages=[...(chats[i].messages||[])];
-showChat();
-$("chatArea").innerHTML="";
-messages.forEach(m=>addMessage(m.role,m.content,false));
+sendButton.addEventListener("click",sendMessage);
+
+function openHistory(){
+  const panel=document.getElementById("historyPanel");
+  const list=document.getElementById("historyList");
+  list.innerHTML="";
+  if(!history.length){
+    list.textContent="Aucune conversation pour le moment.";
+  }else{
+    history.slice().reverse().forEach(m=>{
+      const item=document.createElement("div");
+      item.className="history-entry";
+      item.textContent=(m.role==="user"?"Toi : ":"ELYO : ")+m.text;
+      list.appendChild(item);
+    });
+  }
+  panel.classList.add("show");
 }
-function enabled(input,button){button.disabled=!input.value.trim()}
-$("prompt").addEventListener("input",()=>enabled($("prompt"),$("send")));
-$("chatPrompt").addEventListener("input",()=>enabled($("chatPrompt"),$("chatSend")));
-$("send").onclick=()=>sendMessage($("prompt").value);
-$("chatSend").onclick=()=>sendMessage($("chatPrompt").value);
-[$("prompt"),$("chatPrompt")].forEach(el=>el.addEventListener("keydown",e=>{
-if(e.key==="Enter"&&!e.shiftKey){e.preventDefault();sendMessage(el.value)}
-}));
-document.querySelectorAll(".suggestion").forEach(b=>b.onclick=()=>sendMessage(b.dataset.prompt));
-$("newChat").onclick=showHome;
-$("projectsNav").onclick=()=>alert("La gestion des projets sera ajoutée dans une prochaine étape.");
-$("historyNav").onclick=()=>alert("Les conversations récentes sont dans le menu.");
-$("settingsBtn").onclick=()=>alert("Les paramètres seront ajoutés dans une prochaine version.");
-$("sidebarToggle").onclick=()=>{
-let s=document.querySelector(".sidebar");
-if(innerWidth<700){
-s.style.display=s.style.display==="flex"?"none":"flex";
-s.style.position="absolute";s.style.zIndex="5";s.style.height="100vh";s.style.boxShadow="8px 0 30px #0001";
-}else{
-s.style.width=s.style.width==="72px"?"252px":"72px";
-s.style.overflow="hidden";
+function showHistory(){closeMenu();openHistory();}
+function closeHistory(){document.getElementById("historyPanel").classList.remove("show");}
+function clearHistory(){
+  if(confirm("Effacer l'historique enregistré sur cet appareil ?")){
+    history=[];
+    save();
+    messagesBox.innerHTML="";
+    intro.style.display="block";
+    closeHistory();
+    setState("idle","ELYO EST AVEC TOI");
+  }
 }
-};
-$("themeToggle").onclick=()=>{
-dark=!dark;
-let r=document.documentElement.style;
-r.setProperty("--bg",dark?"#171717":"#fff");
-r.setProperty("--panel",dark?"#1d1d1d":"#fff");
-r.setProperty("--soft",dark?"#292929":"#f7f7f8");
-r.setProperty("--text",dark?"#f5f5f5":"#171717");
-r.setProperty("--muted",dark?"#aaa":"#777");
-r.setProperty("--line",dark?"#333":"#e8e8e8");
-document.querySelectorAll(".composer").forEach(el=>el.style.borderColor=dark?"#383838":"");
-$("themeToggle").textContent=dark?"☀":"◐";
-};
-renderRecent();
+restore();
 </script>
 </body>
 </html>
